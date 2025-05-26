@@ -23,7 +23,20 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: BlocBuilder<TodoBloc, TodoState>(
+      body: BlocConsumer<TodoBloc, TodoState>(
+        listener: (context, state) {
+          if (state is DeleteTodoSuccessState) {
+            context.read<TodoBloc>().add(FetchTodoEvent());
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.message)));
+          }
+          if (state is DeleteTodoFailState) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(state.message),
+              backgroundColor: Colors.red,
+            ));
+          }
+        },
         builder: (context, state) {
           if (state is FetchTodoFail) {
             return Center(
@@ -44,7 +57,11 @@ class HomeScreen extends StatelessWidget {
                       title: Text(state.todo[index].title),
                       subtitle: Text(state.todo[index].description),
                       trailing: IconButton.filledTonal(
-                        onPressed: () {},
+                        onPressed: () {
+                          context
+                              .read<TodoBloc>()
+                              .add(DeleteTodoEvent(id: state.todo[index].id));
+                        },
                         icon: Icon(
                           Icons.delete_outline,
                           color: Colors.red,

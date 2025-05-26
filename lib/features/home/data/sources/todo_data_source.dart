@@ -4,6 +4,8 @@ import 'package:todo_bloc/features/home/data/models/todo.dart';
 abstract class TodoDataSource {
   Future<List<Todo>> fetchTodo();
   Future<String> storeTodo({required Map<String, dynamic> data});
+
+  Future<String> deleteTodo({required int id});
 }
 
 class TodoDataSourceImpl extends TodoDataSource {
@@ -20,5 +22,12 @@ class TodoDataSourceImpl extends TodoDataSource {
   Future<String> storeTodo({required Map<String, dynamic> data}) async {
     final response = await apicalls.sendData(endpoint: 'todo', data: data);
     return response['message'];
+  }
+
+  @override
+  Future<String> deleteTodo({required int id}) async {
+    final result = await apicalls.deleteData(endpoint: 'todo/$id');
+
+    return result['message'];
   }
 }

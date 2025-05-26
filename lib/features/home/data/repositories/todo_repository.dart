@@ -8,6 +8,8 @@ abstract class TodoRepository {
   Future<Either<ApiError, List<Todo>>> fetchTodo();
   Future<Either<ApiError, String>> storeTodo(
       {required Map<String, dynamic> data});
+
+  Future<Either<ApiError, String>> deleteTodo({required int id});
 }
 
 class TodoRepositoryImpl extends TodoRepository {
@@ -40,6 +42,18 @@ class TodoRepositoryImpl extends TodoRepository {
         ApiError(
           errorMessage: e.toString(),
         ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<ApiError, String>> deleteTodo({required int id}) async {
+    try {
+      final result = await todoDataSource.deleteTodo(id: id);
+      return right(result);
+    } catch (e) {
+      return left(
+        ApiError(errorMessage: e.toString()),
       );
     }
   }

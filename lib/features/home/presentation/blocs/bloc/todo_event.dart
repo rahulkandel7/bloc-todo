@@ -10,3 +10,8 @@ class AddTodoEvent extends TodoEvent {
 
   AddTodoEvent({required this.formData});
 }
+
+class DeleteTodoEvent extends TodoEvent {
+  final int id;
+  DeleteTodoEvent({required this.id});
+}

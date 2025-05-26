@@ -34,5 +34,13 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
         (success) => emit(AddTodoSuccessState(message: success)),
       );
     });
+
+    on<DeleteTodoEvent>((event, emit) async {
+      emit(DeleteTodoLoadingState());
+      final result = await todoRepository.deleteTodo(id: event.id);
+      result.fold(
+          (fail) => emit(DeleteTodoFailState(message: fail.errorMessage)),
+          (success) => emit(DeleteTodoSuccessState(message: success)));
+    });
   }
 }

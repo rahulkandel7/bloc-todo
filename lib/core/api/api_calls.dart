@@ -33,4 +33,19 @@ class ApiCalls {
       throw CustomDioException.fromDioError(e);
     }
   }
+
+  // * For deleting
+  deleteData({required String endpoint}) async {
+    try {
+      final Dio dio = Dio(
+        BaseOptions(
+          baseUrl: ApiConstants.apiBaseUrl,
+        ),
+      );
+      final response = await dio.delete(endpoint);
+      return response.data;
+    } on DioException catch (e) {
+      throw CustomDioException.fromDioError(e);
+    }
+  }
 }
